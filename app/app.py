@@ -23,7 +23,7 @@ def subtitleFunc():
     print('subtitle loop started')
     subtitleWindow = tk.Tk()
     icon = PhotoImage(file = 'assets/icon.png')
-    subtitleWindow.iconphoto(False, icon)
+    # subtitleWindow.iconphoto(False, icon)
     subtitleWindow.title('Global Subtitles')
     subtitleWindow.wait_visibility(subtitleWindow)
     subtitleWindow.attributes('-topmost', True, '-alpha', 0.3)
