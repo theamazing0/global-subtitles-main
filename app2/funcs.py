@@ -11,7 +11,6 @@ FORMAT = pyaudio.paInt16
 CHANNELS = 1
 RATE = 16000
 p = pyaudio.PyAudio()
-
 # starts recording
 stream = p.open(
     format=FORMAT,
@@ -21,7 +20,6 @@ stream = p.open(
     frames_per_buffer=FRAMES_PER_BUFFER
 )
 
-# the AssemblyAI endpoint we're going to hit
 URL = "wss://api.assemblyai.com/v2/realtime/ws?sample_rate=16000"
 
 
@@ -63,6 +61,7 @@ async def send_receive():
                  #    print(json.loads(result_str)['text'])
                     subtitle = (json.loads(result_str)['text'])
                     print(subtitle)
+                    app.subtitleLbl['text'] = subtitle
                 except websockets.exceptions.ConnectionClosedError as e:
                     print(e)
                     assert e.code == 4008
@@ -72,43 +71,43 @@ async def send_receive():
 
         send_result, receive_result = await asyncio.gather(send(), receive())
 
-# * Start The Proccess
+# # * Start The Proccess
 
 
-def subtitle():
-    print('subtitle loop started')
-    subtitleWindow = tk.Tk()
-    subtitleWindow.title('Global Subtitles')
-    subtitleWindow.wait_visibility(subtitleWindow)
-    subtitleWindow.attributes('-topmost', True, '-alpha', 0.3)
-    startWindow.destroy()
-    # subtitleWindow.mainloop()
-    asyncio.run(send_receive())
+# def subtitle():
+#     print('subtitle loop started')
+#     subtitleWindow = tk.Tk()
+#     subtitleWindow.title('Global Subtitles')
+#     subtitleWindow.wait_visibility(subtitleWindow)
+#     subtitleWindow.attributes('-topmost', True, '-alpha', 0.3)
+#     startWindow.destroy()  # subtitleWindow.mainloop()
+#     asyncio.run(send_receive())
 
-# * Tkinter Implementation
+# # * Tkinter Implementation
 
-startWindow = tk.Tk()
-startWindow.title('Welcome')
-startWindow.resizable(width=False, height=False)
 
-titleFrame = tk.Frame(master=startWindow)
-titleFrame.columnconfigure(0, minsize=500)
+# startWindow = tk.Tk()
+# startWindow.title('Welcome')
+# startWindow.resizable(width=False, height=False)
 
-titleLbl = tk.Label(text='Global Subtitles', font=(
-    'Times New Roman', '48'), master=titleFrame)
-titleFrame.grid(row=0, column=0)
-titleLbl.grid(row=0, column=0)
+# titleFrame = tk.Frame(master=startWindow)
+# titleFrame.columnconfigure(0, minsize=500)
 
-buttonFrame = tk.Frame(master=startWindow)
-buttonFrame.columnconfigure(2)
-startBtn = tk.Button(master=buttonFrame, text='Start', font=(
-    'Times New Roman', '30'), command=subtitle)
+# titleLbl = tk.Label(text='Global Subtitles', font=(
+#     'Times New Roman', '48'), master=titleFrame)
+# titleFrame.grid(row=0, column=0)
+# titleLbl.grid(row=0, column=0)
 
-buttonFrame.grid(row=1, column=0)
-startBtn.grid(row=0, column=0, padx=50)
+# buttonFrame = tk.Frame(master=startWindow)
+# buttonFrame.columnconfigure(2)
+# startBtn = tk.Button(master=buttonFrame, text='Start', font=(
+#     'Times New Roman', '30'), command=subtitle)
 
-# asyncio.run(send_receive())
+# buttonFrame.grid(row=1, column=0)
+# startBtn.grid(row=0, column=0, padx=50)
 
-startWindow.mainloop()
+# # asyncio.run(send_receive())
 
-# * -------------------------
+# startWindow.mainloop()
+
+# # * -------------------------
