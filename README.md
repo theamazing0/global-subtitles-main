@@ -1,3 +1,9 @@
+# Global Subtitles
+
+## Credits
+
+- This software has been designed using images from Flaticon.com
+
 ## Inspiration
 As the concept of digital usage in education rises in society, more problems are being found, many of which haven't been solved yet.  One of these which me and my teammate have mutually experienced was having teachers that we couldn't understand or just don't want to listen to their voice and would rather read what they say. We believe that many other people have this problem and we found the solution.
 
