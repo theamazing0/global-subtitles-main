@@ -5,7 +5,7 @@ import base64
 import json
 from configure import auth_key
 import tkinter as tk
-import subtitle
+import settings
 
 FRAMES_PER_BUFFER = 3200
 FORMAT = pyaudio.paInt16
@@ -22,7 +22,6 @@ stream = p.open(
 )
 
 URL = "wss://api.assemblyai.com/v2/realtime/ws?sample_rate=16000"
-
 
 async def send_receive():
     print(f'Connecting websocket to url ${URL}')
@@ -70,9 +69,9 @@ async def send_receive():
                         removable=wordCount-4
                         del splitSubtitle[:removable]
                         joinedString=' '.join([str(item) for item in splitSubtitle])
-                        subtitle.subtitleVar = joinedString
+                        settings.subtitleVar = joinedString
                     else:
-                        subtitle.subtitleVar = mySubtitle
+                        settings.subtitleVar = mySubtitle
                 except websockets.exceptions.ConnectionClosedError as e:
                     print(e)
                     assert e.code == 4008
