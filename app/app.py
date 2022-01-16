@@ -1,6 +1,7 @@
 import asyncio
-from fnmatch import translate
-from os import spawnl
+# from fnmatch import translate
+#import os
+# from os import spawnl
 import threading
 import sys
 from PyQt5.QtWidgets import QApplication
@@ -10,7 +11,7 @@ from PyQt5.QtWidgets import QComboBox
 from PyQt5.QtWidgets import QFormLayout
 from PyQt5.QtWidgets import QPushButton
 from PyQt5.QtGui import QPixmap
-from PyQt5 import QtCore
+# from PyQt5 import QtCore
 import settings
 from qt_material import apply_stylesheet
 import tkinter as tk
@@ -18,45 +19,97 @@ from tkinter import *
 import threading
 from PIL import ImageTk, Image
 from translate import Translator
+import configure
+
+# * Create Variables
+
+repeatCount = 0
 
 # * Start The Proccess
 
+
 def translateSubtitle(lang, translateThis):
-    if lang == "Spanish":
-        code = "es"
-    elif lang == "Hindi":
-        code = "hi"
+    if lang == "Bulgarian":
+        code = "BG"
+    elif lang == "Czech":
+        code = "CS"
+    elif lang == "Danish":
+        code = "DA"
+    elif lang == "German":
+        code = "DE"
+    elif lang == "Greek":
+        code = "EL"
+    elif lang == "English (British)":
+        code = "EN-GB"
+    elif lang == "English (American)":
+        code = "EN-US"
+    elif lang == "Spanish":
+        code = "ES"
+    elif lang == "Estonian":
+        code = "ET"
+    elif lang == "Finnish":
+        code = "FI"
     elif lang == "French":
-        code = "fr"
-    elif lang == "Telugu":
-        code = "te"
-    elif lang == "Chinese Simplified":
-        code = "zh"
-    elif lang == "Korean":
-        code = "ko"
-    elif lang == "Tamil":
-        code = "ta"
-    elif lang == "Gujarati":
-        code = "gu"
-    elif lang == "Punjabi":
-        code = "pa"
-    elif lang == "Bengali":
-        code = "bn"
-    translator= Translator(to_lang=code)
+        code = "FR"
+    elif lang == "Hungarian":
+        code = "HU"
+    elif lang == "Italian":
+        code = "IT"
+    elif lang == "Japanese":
+        code = "JA"
+    elif lang == "Lithuanian":
+        code = "LT"
+    elif lang == "Latvian":
+        code = "LV"
+    elif lang == "Dutch":
+        code = "NL"
+    elif lang == "Polish":
+        code = "PL"
+    elif lang == "Portuguese (Brazilian)":
+        code = "PT-BR"
+    elif lang == "Portguese (European)":
+        code = "PT-PT"
+    elif lang == "Romanian":
+        code = "RO"
+    elif lang == "Russian":
+        code = "RU"
+    elif lang == "Slovak":
+        code = "SK"
+    elif lang == "Slovenian":
+        code = "SL"
+    elif lang == "Swedish":
+        code = "SV"
+    elif lang == "Chinese":
+        code = "ZH"
+    translator = Translator(provider='deepl', to_lang=code, secret_access_key=configure.deepl_key)
     return translator.translate(translateThis)
 
-def apiloop(): 
+
+def apiloop():
     import funcs
     asyncio.run(funcs.send_receive())
 
+
 def readFileUpdateSubtitle():
-    print("from app.py:" + settings.subtitleVar)
+    global timedate
+    global homeDirectoryPath
+    global repeatCount
+    repeatCount += 1
+    print(str(repeatCount) + " from app.py:" + settings.subtitleVar)
     rawSubtitle = settings.subtitleVar
+    # if settings.transcriptionEnabled == "Enabled":
+    #     fileName = homeDirectoryPath + \
+    #         "/globalsubtitles_transcription_" + str(timedate)
+    #     file = open(fileName, "a")
+    #     file.write(rawSubtitle + "\n")
+    #     file.close()
     if settings.translateTo != "English":
-        subtitleLbl["text"] = translateSubtitle(settings.translateTo, rawSubtitle)
+        subtitleLbl["text"] = translateSubtitle(
+            settings.translateTo, rawSubtitle)
     else:
         subtitleLbl["text"] = rawSubtitle
     subtitleWindow.after(100, readFileUpdateSubtitle)
+
 
 def subtitleFunc():
     global subtitleLbl
@@ -64,22 +117,26 @@ def subtitleFunc():
     settings.transcriptionEnabled = transcriptioncombo.currentText()
     print(settings.transcriptionEnabled)
     settings.translateTo = translationcombo.currentText()
+    settings.opacity = opacitycombo.currentText()
     print('subtitle loop started')
     subtitleWindow = tk.Tk()
-    icon = PhotoImage(file = 'assets/icon.png')
+    icon = PhotoImage(file='assets/icon.png')
     # subtitleWindow.iconphoto(False, icon)
     subtitleWindow.title('Global Subtitles')
     subtitleWindow.wait_visibility(subtitleWindow)
-    subtitleWindow.attributes('-topmost', True, '-alpha', 0.3)
-    w = subtitleWindow.winfo_screenwidth() # width for the Tk root
-    h = 25 # height for the Tk root
+    if settings.opacity == "Semi-Transparent":
+        subtitleWindow.attributes('-topmost', True, '-alpha', 0.3)
+    elif settings.opacity == "Solid Background":
+        subtitleWindow.attributes('-topmost')
+    w = subtitleWindow.winfo_screenwidth()  # width for the Tk root
+    h = 25  # height for the Tk root
     # get screen width and height
-    ws = subtitleWindow.winfo_screenwidth() # width of the screen
-    hs = subtitleWindow.winfo_screenheight() # height of the screen
+    ws = subtitleWindow.winfo_screenwidth()  # width of the screen
+    hs = subtitleWindow.winfo_screenheight()  # height of the screen
     # calculate x and y coordinates for the Tk root window
     x = ws/2 - ws/2
     y = hs - 100
-    # set the dimensions of the screen 
+    # set the dimensions of the screen
     # and where it is placed
     subtitleWindow.geometry('%dx%d+%d+%d' % (w, h, x, y))
     # making subtitleLbl
@@ -95,10 +152,12 @@ def subtitleFunc():
     subtitleWindow.mainloop()
     # asyncio.run(funcs.send_receive())
 
+
 def gui():
     global window
     global translationcombo
     global transcriptioncombo
+    global opacitycombo
     sapp = QApplication(sys.argv)
     window = QWidget()
     window.setWindowTitle('Global Subtitles')
@@ -112,30 +171,51 @@ def gui():
     transcriptioncombo.addItem("Enabled")
     transcriptioncombo.addItem("Disabled")
     transcriptioncombo.setCurrentText("Disabled")
-    transcriptiondetails = QLabel('<p>After Transcription, Output Can Be Found In Your Home Directory</p>', parent=window)
+    transcriptiondetails = QLabel(
+        '<p>After Transcription, Output Can Be Found In Your Home Directory</p>', parent=window)
     # Translation
     transalationtoMsg = QLabel('<h4>Transalate To</h4>', parent=window)
     translationcombo = QComboBox()
+    translationcombo.addItem("Bulgarian")
+    translationcombo.addItem("Czech")
+    translationcombo.addItem("Danish")
+    translationcombo.addItem("German")
+    translationcombo.addItem("Greek")
+    translationcombo.addItem("English (American)")
+    translationcombo.addItem("English (British)")
     translationcombo.addItem("Spanish")
-    translationcombo.addItem("English")
+    translationcombo.addItem("Estonian")
+    translationcombo.addItem("Finnish")
     translationcombo.addItem("French")
-    translationcombo.addItem("Hindi")
-    translationcombo.addItem("Telugu")
-    translationcombo.addItem("Chinese Simplified")
-    translationcombo.addItem("Korean")
-    translationcombo.addItem("Tamil")
-    translationcombo.addItem("Gujarati")
-    translationcombo.addItem("Punjabi")
-    translationcombo.addItem("Bengali")
-    translationcombo.setCurrentText("English")
+    translationcombo.addItem("Hungarian")
+    translationcombo.addItem("Italian")
+    translationcombo.addItem("Japanese")
+    translationcombo.addItem("Lithuanian")
+    translationcombo.addItem("Latvian")
+    translationcombo.addItem("Dutch")
+    translationcombo.addItem("Polish")
+    translationcombo.addItem("Portguese (Brazilian)")
+    translationcombo.addItem("Portguese (European)")
+    translationcombo.addItem("Romanian")
+    translationcombo.addItem("Russian")
+    translationcombo.addItem("Slovak")
+    translationcombo.addItem("Swedish")
+    translationcombo.addItem("Chinese")
+    translationcombo.setCurrentText("English (American)")
+    opacityMsg = QLabel('<h4>Window Opacity</h4>', parent=window)
+    opacitycombo = QComboBox()
+    opacitycombo.addItem("Semi-Transparent")
+    opacitycombo.addItem("Solid Background")
+    opacitycombo.setCurrentText("Semi-Transparent")
     okButton = QPushButton(window)
     okButton.setText("Start Global Subtitles")
     okButton.clicked.connect(subtitleFunc)
     layout = QFormLayout()
     layout.addRow(titleImgDisplay, titleMsg)
+    layout.addRow(transalationtoMsg, translationcombo)
+    layout.addRow(opacityMsg, opacitycombo)
     layout.addRow(transcriptionMsg, transcriptioncombo)
     layout.addRow(transcriptiondetails)
-    layout.addRow(transalationtoMsg, translationcombo)
     layout.addRow(okButton)
     window.setGeometry(0, 0, 500, 500)
     window.setLayout(layout)

@@ -1,11 +1,18 @@
+from distutils.command.config import config
+from logging.handlers import TimedRotatingFileHandler
 import pyaudio
 import websockets
 import asyncio
 import base64
 import json
-from configure import auth_key
+from configure import assemblyai_key
 import tkinter as tk
 import settings
+from datetime import datetime
+import os
+
+timedate = datetime.now()
+homeDirectoryPath = os.path.expanduser('~')
 
 FRAMES_PER_BUFFER = 3200
 FORMAT = pyaudio.paInt16
@@ -27,7 +34,7 @@ async def send_receive():
     print(f'Connecting websocket to url ${URL}')
     async with websockets.connect(
         URL,
-        extra_headers=(("Authorization", auth_key),),
+        extra_headers=(("Authorization", assemblyai_key),),
         ping_interval=5,
         ping_timeout=20
     ) as _ws:
@@ -42,7 +49,7 @@ async def send_receive():
                 try:
                     data = stream.read(FRAMES_PER_BUFFER)
                     data = base64.b64encode(data).decode("utf-8")
-                    json_data = json.dumps({"audio_data": str(data)})
+                    json_data = json.dumps({"audio_data": str(data),})
                     await _ws.send(json_data)
                 except websockets.exceptions.ConnectionClosedError as e:
                     print(e)
@@ -55,18 +62,28 @@ async def send_receive():
             return True
 
         async def receive():
+            global homeDirectoryPath
+            global timedate
             while True:
                 try:
                     result_str = await _ws.recv()
-                 #    print(json.loads(result_str)['text'])
+                    # print(json.loads(result_str))
                     mySubtitle = (json.loads(result_str)['text'])
+                    if json.loads(result_str)['message_type'] == 'FinalTranscript':
+                        if settings.transcriptionEnabled == "Enabled":
+                            fileName = homeDirectoryPath + \
+                                "/globalsubtitles_transcription_" + str(timedate)
+                            file = open(fileName, "a")
+                            file.write(mySubtitle + "\n")
+                            file.close()
+                        print("Final Transcript: "+json.loads(result_str)['text'])
                     # print(subtitle)
                     # subtitleLabel = subtitleLbl
                     # subtitleLabel['text'] = subtitle
                     splitSubtitle = mySubtitle.split()
                     wordCount = len(splitSubtitle)
-                    if wordCount > 4:
-                        removable=wordCount-4
+                    if wordCount > 8:
+                        removable=wordCount-8
                         del splitSubtitle[:removable]
                         joinedString=' '.join([str(item) for item in splitSubtitle])
                         settings.subtitleVar = joinedString
@@ -80,44 +97,3 @@ async def send_receive():
                     assert False, "Not a websocket 4008 error"
 
         send_result, receive_result = await asyncio.gather(send(), receive())
-
-# # * Start The Proccess
-
-
-# def subtitle():
-#     print('subtitle loop started')
-#     subtitleWindow = tk.Tk()
-#     subtitleWindow.title('Global Subtitles')
-#     subtitleWindow.wait_visibility(subtitleWindow)
-#     subtitleWindow.attributes('-topmost', True, '-alpha', 0.3)
-#     startWindow.destroy()  # subtitleWindow.mainloop()
-#     asyncio.run(send_receive())
-
-# # * Tkinter Implementation
-
-
-# startWindow = tk.Tk()
-# startWindow.title('Welcome')
-# startWindow.resizable(width=False, height=False)
-
-# titleFrame = tk.Frame(master=startWindow)
-# titleFrame.columnconfigure(0, minsize=500)
-
-# titleLbl = tk.Label(text='Global Subtitles', font=(
-#     'Times New Roman', '48'), master=titleFrame)
-# titleFrame.grid(row=0, column=0)
-# titleLbl.grid(row=0, column=0)
-
-# buttonFrame = tk.Frame(master=startWindow)
-# buttonFrame.columnconfigure(2)
-# startBtn = tk.Button(master=buttonFrame, text='Start', font=(
-#     'Times New Roman', '30'), command=subtitle)
-
-# buttonFrame.grid(row=1, column=0)
-# startBtn.grid(row=0, column=0, padx=50)
-
-# # asyncio.run(send_receive())
-
-# startWindow.mainloop()
-
-# # * -------------------------
