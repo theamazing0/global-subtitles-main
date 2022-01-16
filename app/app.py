@@ -10,23 +10,49 @@ from PyQt5.QtWidgets import QWidget
 from PyQt5.QtWidgets import QComboBox
 from PyQt5.QtWidgets import QFormLayout
 from PyQt5.QtWidgets import QPushButton
-from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import QSpinBox
+from PyQt5.QtGui import QPixmap
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
+from PIL.ImageQt import ImageQt
 # from PyQt5 import QtCore
 import settings
 from qt_material import apply_stylesheet
 import tkinter as tk
 from tkinter import *
 import threading
-from PIL import ImageTk, Image
+# from PIL import ImageTk, Image
 from translate import Translator
 import configure
+from tkinter import messagebox
 
 # * Create Variables
 
-repeatCount = 0
+#  repeatCount = 0
+quickstart = False
 
 # * Start The Proccess
+
+
+def tkinterCloseToPyQt():
+    print("----<Subtitle Window Closing To Tray>----")
+    subtitleWindow.destroy()
+    settings.running = False
+
+
+def quickstartfunc():
+    global quickstart
+    quickstart = True
+    subtitleFunc()
+
+
+def show_application():
+    window.show()
+
+
+def on_closing():
+    settings.running = False
+    sys.exit()
 
 
 def translateSubtitle(lang, translateThis):
@@ -85,15 +111,18 @@ def translateSubtitle(lang, translateThis):
     elif lang == "Chinese":
         code = "ZH"
     if code == "hi":
-        translator = Translator(provide='LibreTranslate', to_lang=code, secret_access_key=None, base_url='https://translate.astian.org/')
+        translator = Translator(provider='libre', from_lang="en", to_lang=code,
+                                secret_access_key=None, base_url="https://translate.astian.org/")
     else:
-        translator = Translator(provider='deepl', to_lang=code, secret_access_key=configure.deepl_key)
+        translator = Translator(
+            provider='deepl', to_lang=code, secret_access_key=configure.deepl_key)
     return translator.translate(translateThis)
 
 
 def apiloop():
     import funcs
     asyncio.run(funcs.send_receive())
+
 
 def readFileUpdateSubtitle():
     global timedate
@@ -113,21 +142,27 @@ def readFileUpdateSubtitle():
             settings.translateTo, rawSubtitle)
     else:
         subtitleLbl["text"] = rawSubtitle
-    subtitleWindow.after(100, readFileUpdateSubtitle)
+    if settings.running == True:
+        subtitleWindow.after(100, readFileUpdateSubtitle)
 
 
 def subtitleFunc():
     global subtitleLbl
     global subtitleWindow
-    settings.transcriptionEnabled = transcriptioncombo.currentText()
-    print(settings.transcriptionEnabled)
-    settings.translateTo = translationcombo.currentText()
-    settings.opacity = opacitycombo.currentText()
-    settings.wordcount = wordcountSpin.value()
-    print(settings.wordcount)
-    print('subtitle loop started')
+    global apiloopthread
+    global quickstart
+    if quickstart == False:
+        settings.transcriptionEnabled = transcriptioncombo.currentText()
+        print(settings.transcriptionEnabled)
+        settings.translateTo = translationcombo.currentText()
+        settings.opacity = opacitycombo.currentText()
+        settings.wordcount = wordcountSpin.value()
+        print(settings.wordcount)
+    elif quickstart == True:
+        quickstart == False
+    print('----<Subtitle Window Opening>----')
     subtitleWindow = tk.Tk()
-    icon = PhotoImage(file='assets/icon.png')
+    # icon = PhotoImage(file='assets/icon.png')
     # subtitleWindow.iconphoto(False, icon)
     subtitleWindow.title('Global Subtitles')
     subtitleWindow.wait_visibility(subtitleWindow)
@@ -136,7 +171,7 @@ def subtitleFunc():
     elif settings.opacity == "Solid Background":
         subtitleWindow.attributes('-topmost')
     w = subtitleWindow.winfo_screenwidth()  # width for the Tk root
-    h = 25  # height for the Tk root
+    h = 30  # 25  # height for the Tk root
     # get screen width and height
     ws = subtitleWindow.winfo_screenwidth()  # width of the screen
     hs = subtitleWindow.winfo_screenheight()  # height of the screen
@@ -150,12 +185,18 @@ def subtitleFunc():
     subtitleLbl = tk.Label(
         master=subtitleWindow, text='Listening For Audio...', font=('Times New Roman', 30), bg="yellow", fg="black")
     subtitleLbl.pack()
+    # closebutton = tk.Button(text='✖')
+    # closebutton.pack(side=RIGHT)
+    # subtitleLbl.grid(column=0, row=0)
+    # closebutton.grid(column=1, row=0)
     print("text:" + subtitleLbl["text"])
     import funcs
     apiloopthread = threading.Thread(target=apiloop)
+    apiloopthread.daemon = True
     apiloopthread.start()
     subtitleWindow.after(100, readFileUpdateSubtitle)
     window.close()
+    subtitleWindow.protocol("WM_DELETE_WINDOW", tkinterCloseToPyQt)
     subtitleWindow.mainloop()
     # asyncio.run(funcs.send_receive())
 
@@ -167,9 +208,27 @@ def gui():
     global opacitycombo
     global wordcountSpin
     sapp = QApplication(sys.argv)
+    sapp.setQuitOnLastWindowClosed(False)
+    titleImg = QPixmap('assets/icon2.png')
+    icon = QIcon("assets/icon2.png")
+    # icon = QImage('assets/icon2.png')
+    tray = QSystemTrayIcon()
+    tray.setIcon(icon)
+    tray.setVisible(True)
+    menu = QMenu()
+    option1 = QAction("Show Application")
+    option2 = QAction("Quick Start")
+    quit = QAction("Quit")
+    quit.triggered.connect(on_closing)
+    option1.triggered.connect(show_application)
+    option2.triggered.connect(subtitleFunc)
+    menu.addAction(quit)
+    menu.addAction(option1)
+    menu.addAction(option2)
+    tray.setContextMenu(menu)
     window = QWidget()
     window.setWindowTitle('Global Subtitles')
-    titleImg = QPixmap('assets/icon2.png')
+    # titleImg = QPixmap('assets/icon2.png')
     titleImgDisplay = QLabel()
     titleImgDisplay.setPixmap(titleImg)
     titleMsg = QLabel('<h2>Global Subtitles</h2>', parent=window)
@@ -236,7 +295,6 @@ def gui():
     window.setGeometry(0, 0, 500, 500)
     window.setLayout(layout)
     apply_stylesheet(sapp, theme='dark_blue.xml')
-    window.show()
     sys.exit(sapp.exec_())
 
 

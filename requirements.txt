@@ -6,4 +6,3 @@ PyQt5==5.15.6
 PyQt5-sip==12.9.0
 translate==3.6.1
 lxml==4.7.1
-libretranslatepy==2.1.1

@@ -4,3 +4,4 @@ translateFrom = "English"
 translateTo = "English"
 opacity="Semi-Transparent"
 wordcount=8
+running = True

@@ -1,12 +1,12 @@
-from distutils.command.config import config
-from logging.handlers import TimedRotatingFileHandler
+# from distutils.command.config import config
+# from logging.handlers import TimedRotatingFileHandler
 import pyaudio
 import websockets
 import asyncio
 import base64
 import json
 from configure import assemblyai_key
-import tkinter as tk
+# import tkinter as tk
 import settings
 from datetime import datetime
 import os
@@ -76,7 +76,7 @@ async def send_receive():
                             file = open(fileName, "a")
                             file.write(mySubtitle + "\n")
                             file.close()
-                        print("Final Transcript: "+json.loads(result_str)['text'])
+                        # print("Final Transcript: "+json.loads(result_str)['text'])
                     # print(subtitle)
                     # subtitleLabel = subtitleLbl
                     # subtitleLabel['text'] = subtitle
