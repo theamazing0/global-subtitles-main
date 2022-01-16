@@ -25,6 +25,7 @@ import threading
 from translate import Translator
 import configure
 from tkinter import messagebox
+from pathlib import Path
 
 # * Create Variables
 
@@ -214,8 +215,8 @@ def gui():
     global wordcountSpin
     sapp = QApplication(sys.argv)
     sapp.setQuitOnLastWindowClosed(False)
-    titleImg = QPixmap('assets/icon2.png')
-    icon = QIcon("assets/icon2.png")
+    titleImg = QPixmap(str(Path(__file__).parent / 'assets/icon2.png'))
+    icon = QIcon(str(Path(__file__).parent / "assets/icon2.png"))
     # icon = QImage('assets/icon2.png')
     tray = QSystemTrayIcon()
     tray.setIcon(icon)
