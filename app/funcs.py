@@ -57,7 +57,8 @@ async def send_receive():
                         print("funcs.py loop continuing to run")
                         return True
                     else:
-                        print("funcs.py loop IS ENDING, Is Running: " + str(settings.running))
+                        print("funcs.py loop IS ENDING, Is Running: " +
+                              str(settings.running))
                         sys.exit()
                 except websockets.exceptions.ConnectionClosedError as e:
                     print(e)

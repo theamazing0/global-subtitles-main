@@ -83,8 +83,6 @@ def translateSubtitle(lang, translateThis):
         code = "FR"
     elif lang == "Hungarian":
         code = "HU"
-    elif lang == "Hindi":
-        code = "hi"
     elif lang == "Italian":
         code = "IT"
     elif lang == "Japanese":
@@ -113,12 +111,14 @@ def translateSubtitle(lang, translateThis):
         code = "SV"
     elif lang == "Chinese":
         code = "ZH"
-    if code == "hi":
-        translator = Translator(provider='libre', from_lang="en", to_lang=code,
-                                secret_access_key=None, base_url="https://translate.astian.org/")
-    else:
-        translator = Translator(
-            provider='deepl', to_lang=code, secret_access_key=configure.deepl_key)
+    # if code == "hi":
+    #     translator = Translator(provider='libre', from_lang="en", to_lang=code,
+    #                             secret_access_key=None, base_url="https://translate.astian.org/")
+    # else:
+    #     translator = Translator(
+    #         provider='deepl', to_lang=code, secret_access_key=configure.deepl_key)
+    translator = Translator(
+        provider='deepl', to_lang=code, secret_access_key=configure.deepl_key)
     return translator.translate(translateThis)
 
 
