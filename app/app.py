@@ -11,6 +11,7 @@ from PyQt5.QtWidgets import QComboBox
 from PyQt5.QtWidgets import QFormLayout
 from PyQt5.QtWidgets import QPushButton
 from PyQt5.QtGui import QPixmap
+from PyQt5.QtWidgets import QSpinBox
 # from PyQt5 import QtCore
 import settings
 from qt_material import apply_stylesheet
@@ -53,6 +54,8 @@ def translateSubtitle(lang, translateThis):
         code = "FR"
     elif lang == "Hungarian":
         code = "HU"
+    elif lang == "Hindi":
+        code = "hi"
     elif lang == "Italian":
         code = "IT"
     elif lang == "Japanese":
@@ -81,7 +84,10 @@ def translateSubtitle(lang, translateThis):
         code = "SV"
     elif lang == "Chinese":
         code = "ZH"
-    translator = Translator(provider='deepl', to_lang=code, secret_access_key=configure.deepl_key)
+    if code == "hi":
+        translator = Translator(provide='LibreTranslate', to_lang=code, secret_access_key=None, base_url='https://translate.astian.org/')
+    else:
+        translator = Translator(provider='deepl', to_lang=code, secret_access_key=configure.deepl_key)
     return translator.translate(translateThis)
 
 
@@ -89,13 +95,12 @@ def apiloop():
     import funcs
     asyncio.run(funcs.send_receive())
 
-
 def readFileUpdateSubtitle():
     global timedate
     global homeDirectoryPath
-    global repeatCount
-    repeatCount += 1
-    print(str(repeatCount) + " from app.py:" + settings.subtitleVar)
+    # global repeatCount
+    # repeatCount += 1
+    print("from app.py:" + settings.subtitleVar)
     rawSubtitle = settings.subtitleVar
     # if settings.transcriptionEnabled == "Enabled":
     #     fileName = homeDirectoryPath + \
@@ -118,6 +123,8 @@ def subtitleFunc():
     print(settings.transcriptionEnabled)
     settings.translateTo = translationcombo.currentText()
     settings.opacity = opacitycombo.currentText()
+    settings.wordcount = wordcountSpin.value()
+    print(settings.wordcount)
     print('subtitle loop started')
     subtitleWindow = tk.Tk()
     icon = PhotoImage(file='assets/icon.png')
@@ -158,6 +165,7 @@ def gui():
     global translationcombo
     global transcriptioncombo
     global opacitycombo
+    global wordcountSpin
     sapp = QApplication(sys.argv)
     window = QWidget()
     window.setWindowTitle('Global Subtitles')
@@ -188,6 +196,7 @@ def gui():
     translationcombo.addItem("Finnish")
     translationcombo.addItem("French")
     translationcombo.addItem("Hungarian")
+    translationcombo.addItem("Hindi")
     translationcombo.addItem("Italian")
     translationcombo.addItem("Japanese")
     translationcombo.addItem("Lithuanian")
@@ -207,6 +216,11 @@ def gui():
     opacitycombo.addItem("Semi-Transparent")
     opacitycombo.addItem("Solid Background")
     opacitycombo.setCurrentText("Semi-Transparent")
+    wordcountMsg = QLabel('<h4>Words Shown</h4>', parent=window)
+    wordcountSpin = QSpinBox()
+    wordcountSpin.setValue(8)
+    wordcountinfo = QLabel(
+        '<p>Configures Max Words To Show On Screen At Time</p>', parent=window)
     okButton = QPushButton(window)
     okButton.setText("Start Global Subtitles")
     okButton.clicked.connect(subtitleFunc)
@@ -216,6 +230,8 @@ def gui():
     layout.addRow(opacityMsg, opacitycombo)
     layout.addRow(transcriptionMsg, transcriptioncombo)
     layout.addRow(transcriptiondetails)
+    layout.addRow(wordcountMsg, wordcountSpin)
+    layout.addRow(wordcountinfo)
     layout.addRow(okButton)
     window.setGeometry(0, 0, 500, 500)
     window.setLayout(layout)

@@ -82,8 +82,8 @@ async def send_receive():
                     # subtitleLabel['text'] = subtitle
                     splitSubtitle = mySubtitle.split()
                     wordCount = len(splitSubtitle)
-                    if wordCount > 8:
-                        removable=wordCount-8
+                    if wordCount > settings.wordcount:
+                        removable=wordCount-settings.wordcount
                         del splitSubtitle[:removable]
                         joinedString=' '.join([str(item) for item in splitSubtitle])
                         settings.subtitleVar = joinedString
