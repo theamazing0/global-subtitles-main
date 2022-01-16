@@ -10,6 +10,7 @@ from configure import assemblyai_key
 import settings
 from datetime import datetime
 import os
+import sys
 
 timedate = datetime.now()
 homeDirectoryPath = os.path.expanduser('~')
@@ -30,6 +31,7 @@ stream = p.open(
 
 URL = "wss://api.assemblyai.com/v2/realtime/ws?sample_rate=16000"
 
+
 async def send_receive():
     print(f'Connecting websocket to url ${URL}')
     async with websockets.connect(
@@ -49,8 +51,14 @@ async def send_receive():
                 try:
                     data = stream.read(FRAMES_PER_BUFFER)
                     data = base64.b64encode(data).decode("utf-8")
-                    json_data = json.dumps({"audio_data": str(data),})
+                    json_data = json.dumps({"audio_data": str(data), })
                     await _ws.send(json_data)
+                    if settings.running == True:
+                        print("funcs.py loop continuing to run")
+                        return True
+                    else:
+                        print("funcs.py loop IS ENDING, Is Running: " + str(settings.running))
+                        sys.exit()
                 except websockets.exceptions.ConnectionClosedError as e:
                     print(e)
                     assert e.code == 4008
@@ -58,8 +66,6 @@ async def send_receive():
                 except Exception as e:
                     assert False, "Not a websocket 4008 error"
                 await asyncio.sleep(0.01)
-
-            return True
 
         async def receive():
             global homeDirectoryPath
@@ -72,7 +78,8 @@ async def send_receive():
                     if json.loads(result_str)['message_type'] == 'FinalTranscript':
                         if settings.transcriptionEnabled == "Enabled":
                             fileName = homeDirectoryPath + \
-                                "/globalsubtitles_transcription_" + str(timedate)
+                                "/globalsubtitles_transcription_" + \
+                                str(timedate)
                             file = open(fileName, "a")
                             file.write(mySubtitle + "\n")
                             file.close()
@@ -83,9 +90,10 @@ async def send_receive():
                     splitSubtitle = mySubtitle.split()
                     wordCount = len(splitSubtitle)
                     if wordCount > settings.wordcount:
-                        removable=wordCount-settings.wordcount
+                        removable = wordCount-settings.wordcount
                         del splitSubtitle[:removable]
-                        joinedString=' '.join([str(item) for item in splitSubtitle])
+                        joinedString = ' '.join(
+                            [str(item) for item in splitSubtitle])
                         settings.subtitleVar = joinedString
                     else:
                         settings.subtitleVar = mySubtitle

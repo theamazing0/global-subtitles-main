@@ -43,10 +43,13 @@ def tkinterCloseToPyQt():
 def quickstartfunc():
     global quickstart
     quickstart = True
+    settings.running = True
+    print("I just set settings.running to: " + str(settings.running))
     subtitleFunc()
 
 
 def show_application():
+    settings.running = True
     window.show()
 
 
@@ -144,6 +147,8 @@ def readFileUpdateSubtitle():
         subtitleLbl["text"] = rawSubtitle
     if settings.running == True:
         subtitleWindow.after(100, readFileUpdateSubtitle)
+    else:
+        quit
 
 
 def subtitleFunc():
@@ -221,7 +226,7 @@ def gui():
     quit = QAction("Quit")
     quit.triggered.connect(on_closing)
     option1.triggered.connect(show_application)
-    option2.triggered.connect(subtitleFunc)
+    option2.triggered.connect(quickstartfunc)
     menu.addAction(quit)
     menu.addAction(option1)
     menu.addAction(option2)
