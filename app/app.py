@@ -126,6 +126,7 @@ def translateSubtitle(lang, translateThis):
 
 def apiloop():
     import funcs
+    print("apiloop has started in app.py")
     asyncio.run(funcs.send_receive())
 
 
@@ -134,7 +135,7 @@ def readFileUpdateSubtitle():
     global homeDirectoryPath
     # global repeatCount
     # repeatCount += 1
-    print("from app.py:" + settings.subtitleVar)
+    #! print("from app.py:" + settings.subtitleVar)
     rawSubtitle = settings.subtitleVar
     # if settings.transcriptionEnabled == "Enabled":
     #     fileName = homeDirectoryPath + \
@@ -178,7 +179,7 @@ def subtitleFunc():
     elif settings.opacity == "Solid Background":
         subtitleWindow.attributes('-topmost')
     w = subtitleWindow.winfo_screenwidth()  # width for the Tk root
-    h = 30  # 25  # height for the Tk root
+    h = 30  # 25  # height for the Tk root #! Change Window Height
     # get screen width and height
     ws = subtitleWindow.winfo_screenwidth()  # width of the screen
     hs = subtitleWindow.winfo_screenheight()  # height of the screen

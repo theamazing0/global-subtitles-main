@@ -52,21 +52,36 @@ async def send_receive():
                     data = stream.read(FRAMES_PER_BUFFER)
                     data = base64.b64encode(data).decode("utf-8")
                     json_data = json.dumps({"audio_data": str(data), })
+                    print("Sent Something To AssemblyAI API")
                     await _ws.send(json_data)
-                    if settings.running == True:
-                        print("funcs.py loop continuing to run")
-                        return True
-                    else:
-                        print("funcs.py loop IS ENDING, Is Running: " +
-                              str(settings.running))
-                        sys.exit()
+                    # if settings.running == True:
+                    #     print("funcs.py loop continuing to run")
+                    #     await asyncio.sleep(0.01)
+                    #     return True
+                    # else:
+                    #     print("funcs.py loop IS ENDING, Is Running: " +
+                    #           str(settings.running))
+                    #     sys.exit()
                 except websockets.exceptions.ConnectionClosedError as e:
                     print(e)
                     assert e.code == 4008
                     break
                 except Exception as e:
                     assert False, "Not a websocket 4008 error"
-                await asyncio.sleep(0.01)
+                if settings.running == True:
+                    print("funcs.py loop continuing to run")
+                    await asyncio.sleep(0.01)
+                else:
+                    print("funcs.py loop IS ENDING, Is Running: " +
+                    str(settings.running))
+                    sys.exit()
+            # if settings.running == True:
+            #     print("funcs.py loop continuing to run")
+            #     return True
+            # else:
+            #     print("funcs.py loop IS ENDING, Is Running: " +
+            #     str(settings.running))
+            #     sys.exit()
 
         async def receive():
             global homeDirectoryPath
@@ -74,7 +89,7 @@ async def send_receive():
             while True:
                 try:
                     result_str = await _ws.recv()
-                    # print(json.loads(result_str))
+                    print("from funcs.py: " + str(json.loads(result_str)))
                     mySubtitle = (json.loads(result_str)['text'])
                     if json.loads(result_str)['message_type'] == 'FinalTranscript':
                         if settings.transcriptionEnabled == "Enabled":
