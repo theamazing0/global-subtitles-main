@@ -1,3 +1,28 @@
+'''
+
+ ██████╗ ██╗      ██████╗ ██████╗  █████╗ ██╗     
+██╔════╝ ██║     ██╔═══██╗██╔══██╗██╔══██╗██║     
+██║  ███╗██║     ██║   ██║██████╔╝███████║██║     
+██║   ██║██║     ██║   ██║██╔══██╗██╔══██║██║     
+╚██████╔╝███████╗╚██████╔╝██████╔╝██║  ██║███████╗
+ ╚═════╝ ╚══════╝ ╚═════╝ ╚═════╝ ╚═╝  ╚═╝╚══════╝                                      
+
+███████╗██╗   ██╗██████╗ ████████╗██╗████████╗██╗     ███████╗███████╗
+██╔════╝██║   ██║██╔══██╗╚══██╔══╝██║╚══██╔══╝██║     ██╔════╝██╔════╝
+███████╗██║   ██║██████╔╝   ██║   ██║   ██║   ██║     █████╗  ███████╗
+╚════██║██║   ██║██╔══██╗   ██║   ██║   ██║   ██║     ██╔══╝  ╚════██║
+███████║╚██████╔╝██████╔╝   ██║   ██║   ██║   ███████╗███████╗███████║
+╚══════╝ ╚═════╝ ╚═════╝    ╚═╝   ╚═╝   ╚═╝   ╚══════╝╚══════╝╚══════╝
+
+Made with ❤️ for Coding By Samvid & Navadeep
+!!! Make Sure You Have Specified API Keys In app/configure.py Before Running !!!
+!!! Make Sure You Have Installed All Dependencies In requirements.txt !!!
+Read the LICENSE file for License
+Read README.md for information about the project
+Run app/app.py with Python 3.10.1 to Start Applet
+
+'''
+
 # from distutils.command.config import config
 # from logging.handlers import TimedRotatingFileHandler
 import pyaudio
@@ -13,7 +38,7 @@ import os
 import sys
 
 timedate = datetime.now()
-homeDirectoryPath = os.path.expanduser('~')
+
 
 FRAMES_PER_BUFFER = 3200
 FORMAT = pyaudio.paInt16
