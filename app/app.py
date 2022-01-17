@@ -26,6 +26,7 @@ from translate import Translator
 import configure
 from tkinter import messagebox
 from pathlib import Path
+from os.path import exists
 
 # * Create Variables
 
@@ -243,7 +244,7 @@ def gui():
     transcriptioncombo = QComboBox()
     transcriptioncombo.addItem("Enabled")
     transcriptioncombo.addItem("Disabled")
-    transcriptioncombo.setCurrentText("Disabled")
+    transcriptioncombo.setCurrentText(settings.transcriptionEnabled)
     transcriptiondetails = QLabel(
         '<p>After Transcription, Output Can Be Found In Your Home Directory</p>', parent=window)
     # Translation
@@ -275,15 +276,15 @@ def gui():
     translationcombo.addItem("Slovak")
     translationcombo.addItem("Swedish")
     translationcombo.addItem("Chinese")
-    translationcombo.setCurrentText("English (American)")
+    translationcombo.setCurrentText(settings.translateTo)
     opacityMsg = QLabel('<h4>Window Opacity</h4>', parent=window)
     opacitycombo = QComboBox()
     opacitycombo.addItem("Semi-Transparent")
     opacitycombo.addItem("Solid Background")
-    opacitycombo.setCurrentText("Semi-Transparent")
+    opacitycombo.setCurrentText(settings.opacity)
     wordcountMsg = QLabel('<h4>Words Shown</h4>', parent=window)
     wordcountSpin = QSpinBox()
-    wordcountSpin.setValue(8)
+    wordcountSpin.setValue(settings.wordcount)
     wordcountinfo = QLabel(
         '<p>Configures Max Words To Show On Screen At Time</p>', parent=window)
     okButton = QPushButton(window)
@@ -301,6 +302,7 @@ def gui():
     window.setGeometry(0, 0, 500, 500)
     window.setLayout(layout)
     apply_stylesheet(sapp, theme='dark_blue.xml')
+    # if 
     sys.exit(sapp.exec_())
 
 
