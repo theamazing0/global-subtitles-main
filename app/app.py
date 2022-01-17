@@ -135,7 +135,7 @@ def readFileUpdateSubtitle():
     global homeDirectoryPath
     # global repeatCount
     # repeatCount += 1
-    #! print("from app.py:" + settings.subtitleVar)
+    # print("from app.py:" + settings.subtitleVar)
     rawSubtitle = settings.subtitleVar
     # if settings.transcriptionEnabled == "Enabled":
     #     fileName = homeDirectoryPath + \
@@ -143,7 +143,8 @@ def readFileUpdateSubtitle():
     #     file = open(fileName, "a")
     #     file.write(rawSubtitle + "\n")
     #     file.close()
-    if settings.translateTo != "English":
+    if settings.translateTo != "English (American)":
+        print("Detected Language Alternate Settings")
         subtitleLbl["text"] = translateSubtitle(
             settings.translateTo, rawSubtitle)
     else:
@@ -163,6 +164,7 @@ def subtitleFunc():
         settings.transcriptionEnabled = transcriptioncombo.currentText()
         print(settings.transcriptionEnabled)
         settings.translateTo = translationcombo.currentText()
+        print(settings.translateTo)
         settings.opacity = opacitycombo.currentText()
         settings.wordcount = wordcountSpin.value()
         print(settings.wordcount)
@@ -263,7 +265,6 @@ def gui():
     translationcombo.addItem("Finnish")
     translationcombo.addItem("French")
     translationcombo.addItem("Hungarian")
-    translationcombo.addItem("Hindi")
     translationcombo.addItem("Italian")
     translationcombo.addItem("Japanese")
     translationcombo.addItem("Lithuanian")
@@ -303,6 +304,7 @@ def gui():
     window.setGeometry(0, 0, 500, 500)
     window.setLayout(layout)
     apply_stylesheet(sapp, theme='dark_blue.xml')
+    # file_exists = exists(path_to_file)
     # if 
     sys.exit(sapp.exec_())
 
