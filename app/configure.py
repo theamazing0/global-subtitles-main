@@ -1,3 +1,13 @@
-# Insert Auth Keys In the quotes below
-assemblyai_key="bee8d054748f4dc6906f852306b2d12f"
-deepl_key="e2efa014-bf56-8a42-d5e1-0cf2496867a2:fx"
+#Insert API Keys Here
+
+#* AssemblyAI API Key:
+assemblyai_key="API KEY GOES HERE"
+# Instructions can be found in the
+# "Get your AssemblyAI API Key" section of
+# this article: https://www.assemblyai.com/blog/real-time-speech-recognition-with-python/
+
+#* DeepL Translation API Key
+deepl_key="API KEY GOES HERE"
+# Requires Sign Up To "DeepL Pro
+# DeepL Pro has free 500k words
+# Sign Up Here: https://www.deepl.com/pro-account
