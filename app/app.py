@@ -24,14 +24,15 @@ import threading
 # from PIL import ImageTk, Image
 from translate import Translator
 import configure
-from tkinter import messagebox
 from pathlib import Path
 from os.path import exists
+import os
 
 # * Create Variables
 
 #  repeatCount = 0
 quickstart = False
+homeDirectoryPath = os.path.expanduser('~')
 
 # * Start The Proccess
 
@@ -168,6 +169,19 @@ def subtitleFunc():
         settings.opacity = opacitycombo.currentText()
         settings.wordcount = wordcountSpin.value()
         print(settings.wordcount)
+        file_exists = exists(homeDirectoryPath+"/.globalsubtitles")
+        if file_exists == False:
+            dotfile = open(homeDirectoryPath+"/.globalsubtitles", "w")
+            dotfile.write("F for showWindow")
+            dotfile.close()
+        elif file_exists == True:
+            dotfile = open(homeDirectoryPath+"/.globalsubtitles", "w")
+            if showWindowOnStartupCombo.currentText() == 'Enabled':
+                dotfile.write("T for showWindow")
+                dotfile.close()
+            elif showWindowOnStartupCombo.currentText() == 'Disabled':
+                dotfile.write("F for showWindow")
+                dotfile.close()
     elif quickstart == True:
         quickstart == False
     print('----<Subtitle Window Opening>----')
@@ -217,6 +231,8 @@ def gui():
     global transcriptioncombo
     global opacitycombo
     global wordcountSpin
+    global homeDirectoryPath
+    global showWindowOnStartupCombo
     sapp = QApplication(sys.argv)
     sapp.setQuitOnLastWindowClosed(False)
     titleImg = QPixmap(str(Path(__file__).parent / 'assets/icon2.png'))
@@ -289,6 +305,25 @@ def gui():
     wordcountSpin.setValue(settings.wordcount)
     wordcountinfo = QLabel(
         '<p>Configures Max Words To Show On Screen At Time</p>', parent=window)
+    showWindowOnStartupMsg = QLabel('<h4>Show Window on Startup</h4>', parent=window)
+    showWindowOnStartupCombo = QComboBox()
+    showWindowOnStartupCombo.addItem("Enabled")
+    showWindowOnStartupCombo.addItem("Disabled")
+    file_exists = exists(homeDirectoryPath+"/.globalsubtitles")
+    if file_exists == False:
+        dotfile = open(homeDirectoryPath+"/.globalsubtitles", "w")
+        dotfile.write("F for showWindow")
+        showWindowSetting = "Disabled"
+        # dotfile.close()
+    elif file_exists == True:
+        dotfile = open(homeDirectoryPath+"/.globalsubtitles", "r")
+        configfilevalue = dotfile.read(1)
+        if configfilevalue == 'T':
+            showWindowSetting = "Enabled"
+            #window.show()
+        elif configfilevalue == 'F':
+            showWindowSetting = "Disabled"
+    showWindowOnStartupCombo.setCurrentText(showWindowSetting)
     okButton = QPushButton(window)
     okButton.setText("Start Global Subtitles")
     okButton.clicked.connect(subtitleFunc)
@@ -300,12 +335,16 @@ def gui():
     layout.addRow(transcriptiondetails)
     layout.addRow(wordcountMsg, wordcountSpin)
     layout.addRow(wordcountinfo)
+    layout.addRow(showWindowOnStartupMsg, showWindowOnStartupCombo)
     layout.addRow(okButton)
     window.setGeometry(0, 0, 500, 500)
     window.setLayout(layout)
     apply_stylesheet(sapp, theme='dark_blue.xml')
-    # file_exists = exists(path_to_file)
-    # if 
+    dotfile.close()
+    print("Just Closed Dot File, showWindowSettings is equal to: " + showWindowSetting)
+    if showWindowSetting == "Enabled":
+        print("showWindowSetting is True")
+        window.show()
     sys.exit(sapp.exec_())
 
 
