@@ -61,7 +61,7 @@ URL = "wss://api.assemblyai.com/v2/realtime/ws?sample_rate=16000"
 
 # Used Internally To Communicate With AssemblyAI
 async def send_receive():
-    print('     INFO: Connecting websocket to url ${URL}')
+    print('     INFO: Connecting websocket to url: ' + URL)
     async with websockets.connect(
         URL,
         extra_headers=(("Authorization", assemblyai_key),),
