@@ -402,6 +402,7 @@ def gui():
     translationcombo.addItem("Chinese")
     # Sets ComboBox Default Option
     translationcombo.setCurrentText(settings.translateTo)
+    #! Opacity Configuration Options
     # Creates Label To Describe Opacity Option
     opacityMsg = QLabel('<h4>Window Opacity</h4>', parent=window)
     # Creates ComboBox To Choose Opacity Levels
@@ -412,6 +413,7 @@ def gui():
     opacitycombo.addItem("Solid Background")
     # Sets Opacity Combo To Default / Previous Setting
     opacitycombo.setCurrentText(settings.opacity)
+    #! Words Shown Configuration Options
     # Creates Label To Describe Word Count Option
     wordcountMsg = QLabel('<h4>Words Shown</h4>', parent=window)
     # Creates Spin Box To Choose Word Count
@@ -421,6 +423,7 @@ def gui():
     # Creates Label To Give More Info About Word Count Option
     wordcountinfo = QLabel(
         '<p>Configures Max Words To Show On Screen At Time</p>', parent=window)
+    #! Show Window On Startup Configuration Options
     # Creates Label To Describe Show Window On Startup Option
     showWindowOnStartupMsg = QLabel(
         '<h4>Show Window on Startup</h4>', parent=window)

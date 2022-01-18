@@ -71,7 +71,6 @@ async def send_receive():
         await asyncio.sleep(0.1)
         print("     INFO: Receiving SessionBegins ...")
         session_begins = await _ws.recv()
-        print(session_begins)
         print("     INFO: Sending messages ...")
 
         async def send():
