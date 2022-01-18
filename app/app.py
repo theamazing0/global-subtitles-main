@@ -493,6 +493,7 @@ def gui():
 # If Code Is Being Run
 if __name__ == "__main__":
     # Prints ASCII Art To Logs
+    print("\n")
     print('''    ██████╗ ██╗      ██████╗ ██████╗  █████╗ ██╗     
     ██╔════╝ ██║     ██╔═══██╗██╔══██╗██╔══██╗██║     
     ██║  ███╗██║     ██║   ██║██████╔╝███████║██║     
@@ -506,6 +507,7 @@ if __name__ == "__main__":
     ╚════██║██║   ██║██╔══██╗   ██║   ██║   ██║   ██║     ██╔══╝  ╚════██║
     ███████║╚██████╔╝██████╔╝   ██║   ██║   ██║   ███████╗███████╗███████║
     ╚══════╝ ╚═════╝ ╚═════╝    ╚═╝   ╚═╝   ╚═╝   ╚══════╝╚══════╝╚══════╝''')
+    print("\n")
     # Print Welcome Information
     print("     Made with ❤️ for Coding By Samvid & Navadeep")
     print("     Read the LICENSE file for License")
