@@ -30,7 +30,7 @@
 - Translation API by DeepL - **API Key Required**
 
 ## Inspiration
-As the concept of digital usage in education rises in society, more problems are being found, many of which haven't been solved yet.  One of these which me and my teammate have mutually experienced was having teachers that we couldn't understand or just don't want to listen to their voice and would rather read what they say. We believe that many other people have this problem and we found the solution.
+As the concept of digital usage in education rises in society, more problems are being found, many of which haven't been solved yet.  One of these which me and my teammate have mutually experienced was having teachers that we couldn't understand and would rather read what they say. We believe that many other people have this problem and we found the solution.
 
 ## What it does
 Our program can record not only your voice but also any audio on your computer and turn it into text using the AssemblyAPI automatic speech conversion API. The program can display any text in a bar at the bottom of the screen, made to smoothly roll the text down your screen so you can read it comfortably.
