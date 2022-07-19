@@ -14,7 +14,6 @@
 ███████║╚██████╔╝██████╔╝   ██║   ██║   ██║   ███████╗███████╗███████║
 ╚══════╝ ╚═════╝ ╚═════╝    ╚═╝   ╚═╝   ╚═╝   ╚══════╝╚══════╝╚══════╝
 
-Made with ❤️ for Coding By Samvid & Navadeep
 !!! Make Sure You Have Specified API Keys In app/configure.py Before Running !!!
 !!! Make Sure You Have Installed All Dependencies In requirements.txt !!!
 Read the LICENSE file for License
