@@ -511,7 +511,6 @@ if __name__ == "__main__":
     ╚══════╝ ╚═════╝ ╚═════╝    ╚═╝   ╚═╝   ╚═╝   ╚══════╝╚══════╝╚══════╝''')
     print("\n")
     # Print Welcome Information
-    print("     Made with ❤️ for Coding By Samvid & Navadeep")
     print("     Read the LICENSE file for License")
     print("     Read README.md for information about the project")
     # Check If User Has Supplied API Keys & Provide Warnings If Not
